@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.SellerOrderDao">
+	<!-- 查询店铺中所有的商品 -->	
+	<select id="list" parameterType="Goods" resultType="Goods">
+		select * from goods where store_id=#{store_id}
+	</select>
+	
+	<!-- 查询商品属性 -->
+	<select id="listAttribute" resultType="Attribute">
+		select * from attribute  where goods_id=#{goods_id}
+	</select>
+	
+	
+	<insert id="add" parameterType="Order"  useGeneratedKeys="true" keyProperty="order_id" keyColumn="order_id">
+		insert into `order` (order_time,order_money,order_state,customer,order_number,address,store_id,order_epay_type,wx)
+		values (#{order_time},#{order_money},#{order_state},#{customer},#{order_number},#{address},#{store_id},#{order_epay_type},#{wx})
+	</insert>
+	<insert id="addOrderGoods" parameterType="List">
+		insert into order_goods (order_id,goods_id,goods_price,order_goods_state,goods_num,customer,store_id,attribute) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+        (#{item.order_id},#{item.goods_id},#{item.goods_price},#{item.order_goods_state},#{item.goods_num},#{item.customer},#{item.store_id},#{item.attribute})
+		</foreach>
+		
+	</insert>
+</mapper>

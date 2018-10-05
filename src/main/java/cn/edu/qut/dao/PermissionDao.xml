@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.PermissionDao">
+    
+    <!-- 根据角色id查询所有导航结点 -->
+    <select id="findNavisByRoleId"  parameterType="Integer" resultType="cn.edu.qut.entity.Permission">
+        SELECT
+			p.*
+		FROM
+			role_permission rp,
+			permission p
+		WHERE
+			rp.role_id = #{role_id}
+		AND rp.permission_id = p.permission_id
+		AND p.permission_isNavi = '1'
+    </select>
+    
+    <select id="queryMenu" parameterType="String" resultType="Map">
+		SELECT
+			permission.permission_id,
+			permission.permission_name,
+			permission.permission_url,
+			permission.permission_parent
+		FROM
+			<!-- seller_role, -->
+			role,
+			role_permission,
+			permission,
+			seller
+		where 
+			seller.seller_login_name=#{seller_login_name}
+		<!-- and
+			seller_role.seller_id=seller.seller_id
+		AND
+			seller_role.role_id=role.role_id -->
+		and	seller.role_id=role.role_id
+		and 
+			role.role_id=role_permission.role_id
+		and 
+			role_permission.permission_id=permission.permission_id
+		<!-- 2017-12-24 yp 加菜单状态 -->
+		and permission.permission_state = '1'
+		
+	</select>
+	
+	<!-- 查询所有的1级菜单  -->
+	<select id="queryMenu1" resultType="Map">
+		select 
+			permission.permission_id,
+			permission.permission_name,
+			permission.permission_url,
+			permission.permission_parent,
+			permission.permission_icon
+		from permission
+		where permission.permission_parent='-1'
+	</select>
+    
+    <select id="clerkMenuList" resultType="Map">
+    	SELECT
+			permission.permission_id,
+			permission.permission_name,
+			permission.permission_url,
+			permission.permission_parent
+		FROM
+			permission,
+			seller,
+			clerk_permission
+		where 
+			seller.seller_login_name=#{seller_login_name}
+		and seller.seller_id = clerk_permission.clerk_id
+		and clerk_permission.permission_id = permission.permission_id
+    </select>
+</mapper>

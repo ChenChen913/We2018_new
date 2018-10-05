@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.SellerDao">
+    
+    <!--根据名字查询用户-->
+    <select id="getSellerByUserName" parameterType="string" 
+        resultType="cn.edu.qut.entity.Seller">
+        SELECT * FROM seller 
+        	WHERE seller_login_name=#{seller_name}
+    </select>
+    
+    <select id="findRolesByUserName" resultType="String">
+    	SELECT
+			role.role_code
+		FROM
+			seller,
+			<!-- seller_role, -->
+			role
+		WHERE
+			seller.seller_login_name = #{seller_login_name}
+		<!-- AND seller.seller_id = seller_role.seller_id -->
+		AND seller.role_id = role.role_id
+    </select>
+    
+    <select id="findPermissionsByUserName" resultType="String">
+    	SELECT
+			permission.permission_code
+		FROM
+			seller,
+			<!-- seller_role, -->
+			role,
+			role_permission,
+			permission
+		WHERE
+			seller.seller_login_name = #{seller_login_name}
+		AND seller.role_id = role.role_id
+		AND role.role_id = role_permission.role_id
+		AND role_permission.permission_id = permission.permission_id
+    </select>
+    
+    <!-- 根据用户名查找员工额外的权限 -->
+    <select id="listClerkPermission" resultType="String">
+    	SELECT
+			p.permission_code
+		FROM
+			seller s,
+			clerk_permission cp,
+			permission p
+		WHERE
+			s.seller_login_name = #{seller_login_name}
+		AND s.seller_id = cp.clerk_id
+		AND cp.permission_id = p.permission_id
+    </select>
+    
+   
+   <!-- 	//个人信息修改 -->
+   <update id="update">
+   		update seller set seller_phone=#{seller_phone},seller_epay=#{seller_epay},seller_real_name=#{seller_real_name}
+   		where seller_id=#{seller_id}
+   </update>
+	
+	<!-- 根据用户id查找用户信息 -->
+	<select id="query" resultType="cn.edu.qut.entity.Seller">
+		select * from seller where seller_id=#{seller_id}
+	</select>
+	
+	<!-- 更新图片字段 -->
+	 <update id="updateLogo" >
+	 	update seller set seller_img=#{seller_img} where seller_id=#{seller_id}
+	 </update>
+	 
+	 <select id="ajax_password" parameterType="cn.edu.qut.entity.Seller" resultType="Integer">
+	 	select count(*) from seller where seller_id=#{seller_id} and seller_password=#{seller_password}
+	 </select>
+	 
+	 <update id="updateSellerPassword" parameterType="cn.edu.qut.entity.Seller">
+	 	update seller set seller_password=#{seller_password}
+   		where seller_id=#{seller_id}
+	 </update>
+    
+</mapper>

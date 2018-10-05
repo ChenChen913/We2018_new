@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.app.GoodsReperporyDao">
+	  <!-- 	//密码修改 -->
+   <select id="selectReperpory" resultType="cn.edu.qut.entity.app.Reperpory">
+   		SELECT g.goods_name,a.attribute_name,a.attribute_repertory 
+		FROM goods g,attribute a
+		WHERE g.store_id = #{store_id} 
+		AND g.goods_id = a.goods_id
+   </select>
+</mapper>

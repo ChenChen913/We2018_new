@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.app.OrderAndroidDao">
+   
+       
+    <!-- 删除 单挑商品-->
+    <delete id="delete">
+    	delete from order_goods where order_goods_id = #{order_goods_id}
+    </delete>
+    
+    	<!-- 查找订单 -->
+	<!-- ,u.user_login_name -->
+	<select id="list" parameterType="Order" resultType="Order">
+		select o.* from `order` o where
+	 		customer=#{customer}
+	 		and order_state=#{order_state}
+	 	and o.order_time_send is NULL
+	 	ORDER BY o.order_time DESC
+		<!-- order是保留字段，加引号 -->
+	</select>
+	 <update id="sendGoods">
+    	UPDATE `order` SET order.order_time_send = NOW()
+ 		WHERE order_id = #{order_id}
+    </update>
+    
+ </mapper>

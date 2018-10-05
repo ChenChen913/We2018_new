@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.GradeDao">
+    <!-- 增 -->
+   <insert id="add" parameterType="Grade">
+   		insert into grade 
+   			(store_id,customer_id,grade_type)
+   		values (#{store_id},#{customer_id},#{grade_type})
+   </insert>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Grade">
+		delete from grade where grade_id=#{grade_id}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="Grade">
+		update grade
+		set grade_type=#{grade_type}
+		where grade_id=#{grade_id}
+	</update>
+	
+	<!-- 查找 -->
+	<select id="query" parameterType="Grade" resultType="Grade">
+		select grade.*,customer.customer_login_name from grade,customer where grade_id=#{grade_id}
+		and grade.customer_id=customer.customer_id 
+	</select>
+	
+	<select id="list" parameterType="Grade" resultType="Grade">
+		select grade.*,customer.customer_login_name from grade,customer where store_id=#{store_id} 
+		and grade.customer_id=customer.customer_id 
+		<if test="customer_login_name!= null and customer_login_name !=''">
+			and customer_login_name like concat(concat("%",#{customer_login_name}),"%")
+		</if>
+	</select>
+	
+	<insert id="saveOrUpdate" parameterType="Grade">
+	  <selectKey keyProperty="count" resultType="int" order="BEFORE">
+	    select count(*) from grade where store_id=#{store_id} and customer_id=#{customer_id}
+	  </selectKey>
+	  <if test="count > 0">
+	    update grade
+	    set grade_type=#{grade_type}
+		where grade_id=#{grade_id}
+	  </if>
+	  <if test="count==0">
+	    insert into grade 
+   			(store_id,customer_id,grade_type)
+   		values (#{store_id},#{customer_id},#{grade_type})
+	  </if>
+	</insert>
+	
+	<select id="queryCustomerByName" resultType="Map">
+		select customer_id,customer_login_name from customer where customer_login_name = #{customer_login_name}
+	</select>
+	
+	
+	
+    
+</mapper>

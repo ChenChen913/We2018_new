@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- <typeAliases>
+        <typeAlias alias="Permission" type="com.test.entity.Permission"/>
+        <typeAlias alias="Role" type="com.test.entity.Role"/>
+        <typeAlias alias="RolePermission" type="com.test.entity.RolePermission"/>
+        <typeAlias alias="User" type="com.test.entity.User"/>
+        <typeAlias alias="UserRole" type="com.test.entity.UserRole"/>
+    </typeAliases> -->
+    
+    <typeAliases>
+    	<typeAlias alias="Supplier" type="cn.edu.qut.entity.Supplier"/>
+    	<typeAlias alias="Sort" type="cn.edu.qut.entity.Sort"/>
+    	<typeAlias alias="Goods" type="cn.edu.qut.entity.Goods"/>
+    	<typeAlias alias="Attribute" type="cn.edu.qut.entity.Attribute"/>
+    	<typeAlias alias="Customer" type="cn.edu.qut.entity.Customer"/>
+    	<typeAlias alias="Store" type="cn.edu.qut.entity.Store"/>
+    	<typeAlias alias="Order" type="cn.edu.qut.entity.Order"/>
+    	<typeAlias alias="OrderGoods" type="cn.edu.qut.entity.OrderGoods"/>
+    	<typeAlias alias="Grade" type="cn.edu.qut.entity.Grade"/>
+    	<typeAlias alias="SupplierOrder" type="cn.edu.qut.entity.SupplierOrder"/>
+    	
+    </typeAliases>
+    
+    <plugins>  
+	    <plugin interceptor="com.github.pagehelper.PageHelper">  
+<!-- 	    <plugin interceptor="com.github.pagehelper.PageInterceptor">   -->
+	        <!-- config params as the following -->  
+	        <!--<!–分页参数合理化  –>-->  
+	        <property name="reasonable" value="true"/>  
+	    </plugin>  
+	</plugins>  
+</configuration>

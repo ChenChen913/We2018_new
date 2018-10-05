@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.OrderDao">
+   
+	<!-- 查找订单 -->
+	<!-- ,u.user_login_name -->
+	<select id="list" parameterType="Order" resultType="Order">
+		select o.* from `order` o where
+		store_id = #{store_id}
+		<if test="customer!=null and customer!=''">
+	 		and customer=#{customer}
+	 	</if>
+		<if test="order_state!=null and order_state!=''">
+	 		and order_state=#{order_state}
+	 	</if>
+	 	
+	 	ORDER BY o.order_time DESC
+		<!-- order是保留字段，加引号 -->
+	</select>
+	
+	<!-- 查找子订单 -->
+	<select id="listOrderGoods" resultType="OrderGoods">
+		select og.*,g.goods_name from order_goods og,goods g
+		
+		where og.goods_id = g.goods_id
+		
+		and order_id=#{order_id}
+	</select>
+	
+	<!-- 增加订单子表，可以扩展用作购物车 -->
+	<!-- 模拟插入订单的顺序
+		1.add 订单子表-商品(order_id没有)
+		2.确认提交生成 order_id,并且生成订单表
+		3.将订单子表修改参考外键 goods_id
+	
+	 -->
+	<insert id="addOrderGoods">
+		insert into order_goods 
+			(goods_id,goods_price,order_goods_state,goods_num,customer,store_id,attribute)
+		values (#{goods_id},#{goods_price},#{order_goods_state},#{goods_num},#{customer},#{store_id},#{attribute})
+	</insert>
+	
+	<!-- 查询所有的订单子表 -->
+	<select id="shoppingCart" resultType="OrderGoods">
+		select og.*,g.goods_img1,g.goods_name from order_goods og,goods g 
+		where 
+			og.goods_id=g.goods_id and
+			og.customer=#{customer}
+			and og.order_goods_state='0'
+	</select>
+	
+	<!-- 查询数据库中有没有  -->
+	<select id="queryIsExistence" parameterType="OrderGoods" resultType="Integer">
+		select count(*) "is" from order_goods og where og.goods_id=#{goods_id} 
+		and og.order_goods_state='0' and og.customer=#{customer}
+		and attribute=#{attribute}
+	</select>
+   
+    <!-- 查询数据库中该商品的数量  -->
+	<select id="queryNum" parameterType="OrderGoods" resultType="Integer">
+		select og.goods_num "num" from order_goods og where og.goods_id=#{goods_id} 
+		and og.order_goods_state='0' and og.customer=#{customer} 
+		and attribute=#{attribute}
+	</select>
+	
+	
+    <!-- 修改商品数量 -->
+    <update id="updateOrderGoodsNum" parameterType="OrderGoods">
+    	update  order_goods set goods_num=#{goods_num} where goods_id=#{goods_id} and attribute=#{attribute} and order_goods_state='0'
+    </update>
+    
+    <!-- 删除 单挑商品-->
+    <delete id="delete">
+    	delete from order_goods where goods_id=#{goods_id}
+    	and customer=#{customer}
+    </delete>
+    
+    
+    <!-- 插入订单 -->
+    <insert id="add" parameterType="Order"  useGeneratedKeys="true" keyProperty="order_id" keyColumn="order_id">
+    	insert into `order` (order_time,order_money,order_state,customer,order_number,store_id,order_epay_type,address,wx) 
+    	values (#{order_time},#{order_money},#{order_state},#{customer},#{order_number},#{store_id},#{order_epay_type},#{address},#{wx})
+    </insert>
+    
+    <update id="update" parameterType="Order">
+    	update `order` set seller_id = #{seller_id},order_state=#{order_state} where order_id=#{order_id}
+    </update>
+    
+    <update id="updateOrderGoods">
+    	update order_goods set order_goods_state='1',order_id=#{order_id} where order_goods_id=#{order_goods_id}
+    </update>
+    
+    <!-- websocket 查询未处理订单的数量 -->
+    <select id="queryCountof0" resultType="Integer">
+    	select count(*) from `order` where order_state='0'
+    </select>
+    
+    <select id="query" resultType="Order">
+    	select o.* from `order` o where  o.order_id = #{order_id}
+    </select>
+    
+    
+    
+    <!-- 以下是发货 -->
+    
+    
+    <update id="send" parameterType="Order">
+    	update `order` set order_time_send = #{order_time_send} where order_id=#{order_id}
+    </update>
+</mapper>

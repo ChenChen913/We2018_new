@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.StoreDao">
+   <!--  //增
+	boolean add(Store store);
+	//删
+	boolean delete(String store_id);
+	//改
+	boolean update(Store store);
+	//查
+	Store  query(Integer store_id); 
+	List<Store> list();-->
+	<!-- 供店主使用 -->
+    <select id="query" resultType="cn.edu.qut.entity.Store">
+    	select * from store where seller_id=#{seller_id}
+    	
+    </select>
+    
+    <update id="update" parameterType="cn.edu.qut.entity.Store">
+    	update store set store_name=#{store_name},store_content=#{store_content}
+    	where store_id = #{store_id}
+    </update>
+    
+    <!-- 更新图片字段 -->
+	 <update id="updateLogo" >
+	 	update store set store_img=#{store_img} where store_id=#{store_id}
+	 </update>
+</mapper>

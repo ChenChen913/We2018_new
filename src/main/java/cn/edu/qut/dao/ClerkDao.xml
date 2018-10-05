@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.edu.qut.dao.ClerkDao">
+    
+    <!--根据用户名查询该店铺中的所有店员-->
+    <select id="queryClerkBySellerName" parameterType="string" 
+        resultType="Map">
+        SELECT
+			s2.*
+		FROM
+			seller s1,
+			seller s2
+		WHERE
+			s1.seller_login_name = #{seller_login_name}
+		AND s1.store_id = s2.store_id
+		AND s2.seller_login_name != #{seller_login_name}
+    </select>
+
+	<!-- useGeneratedKeys="true" -->
+	<insert id="addClerk" parameterType="cn.edu.qut.entity.Seller" useGeneratedKeys="true" keyProperty="seller_id" keyColumn="seller_id">
+		insert into seller (store_id,seller_login_name,seller_password,seller_state,seller_reg_date,role_id) values
+		(#{store_id},#{seller_login_name},#{seller_password},#{seller_state},#{seller_reg_date},#{role_id})
+		
+	</insert>
+	
+	<!-- <insert id="addClerkRole" parameterType="cn.edu.qut.entity.Seller_role" >
+		insert into seller_role (seller_id,role_id,seller_role_state) values
+		(#{seller_id},#{role_id},'1')
+	</insert> -->
+	
+	<!-- <delete id="deleteClerkRole_physics" >
+		delete from clerk_role where clerk_role.clerk_id=#{seller_id}
+	</delete> -->
+	
+	<delete id="deleteClerkById_physics">
+		delete  from seller where seller_id=#{seller_id}
+	</delete>
+	
+	<!-- 校验有用户名重复 -->
+	<select id="validate" resultType="Integer">
+		select count(*) from seller where seller_login_name = #{#seller_login_name}
+	</select>
+	
+	<!-- 批量给一位员工授权 全写写入seller_permission -->
+	<insert id="authorizeClerkByBatch" parameterType="java.util.List">
+		insert into clerk_permission (clerk_id,permission_id) values
+		<foreach collection="list" item="sss" separator="," >
+			(#{sss.clerk_id},#{sss.permission_id})
+		</foreach>
+	</insert>
+	
+	<!-- 根据店员id查询店员额外的权限 -->
+	<select id="queryClerkPermission" resultType="Map">
+		select * from clerk_permission where clerk_id=#{clerk_id}
+	</select>
+	
+	<!-- 根据店主id查询店主的权限 -->
+	<select id="querySellerPermission" resultType="Map">
+		SELECT
+			p.permission_id,
+			p.permission_name
+		FROM
+			<!-- seller_role sr, -->
+			seller s,
+			role_permission rp,
+			permission p
+		WHERE
+			s.seller_id = #{seller_id}
+		AND s.role_id = rp.role_id
+		AND p.permission_id = rp.permission_id
+	</select>
+	
+ 	<select id="selectNameByclerkID" resultType="String">
+ 		select seller_login_name from seller where seller_id=#{clerk_id}
+ 	</select>
+    
+    <delete id="deleteAllClerkPermissionById" >
+    	delete from clerk_permission where clerk_id=#{clerk_id}
+    </delete>
+</mapper>

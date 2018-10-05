@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.AttributeDao">
+    <!-- 增 -->
+   <insert id="add" parameterType="Attribute">
+   		insert into attribute 
+   			(goods_id,attribute_name,attribute_repertory,attribute_price0,attribute_price,attribute_price_agent,attribute_price_vip,attribute_memo)
+   		values (#{goods_id},#{attribute_name},#{attribute_repertory},#{attribute_price0},#{attribute_price},#{attribute_price_agent},#{attribute_price_vip},#{attribute_memo})
+   </insert>
+   
+   
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Attribute">
+		delete from attribute where attribute_id=#{attribute_id}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="Attribute">
+		update attribute
+		set attribute_name=#{attribute_name},
+			attribute_repertory=#{attribute_repertory},
+			attribute_price0=#{attribute_price0},
+			attribute_price=#{attribute_price},
+			attribute_price_agent=#{attribute_price_agent},
+			attribute_price_vip=#{attribute_price_vip},
+			attribute_memo=#{attribute_memo}
+		where attribute_id=#{attribute_id}
+	</update>
+	
+	<!-- 查找 -->
+	<select id="query" parameterType="Attribute" resultType="Attribute">
+		select * from attribute where attribute_id=#{attribute_id}
+	</select>
+	
+	<select id="list" parameterType="Attribute" resultType="Attribute">
+		select * from attribute where goods_id=#{goods_id} 
+		
+	</select>
+	
+	 <!--批量添加-->
+   <insert id="addBatch" parameterType="java.util.List">
+   		insert into attribute 
+   			(goods_id,attribute_name,attribute_repertory,attribute_price0,attribute_price,attribute_price_agent,attribute_price_vip,attribute_memo)
+   		values 
+   		<foreach collection="list" item="i" index="index" separator=",">
+   			(#{i.goods_id},#{i.attribute_name},#{i.attribute_repertory},#{i.attribute_price0},#{i.attribute_price},#{i.attribute_price_agent},#{i.attribute_price_vip},#{i.attribute_memo})
+   		</foreach>
+   </insert>
+	
+    
+</mapper>

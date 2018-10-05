@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.GoodsDao">
+    <!-- 增 -->
+   <insert id="add" parameterType="Goods">
+   		insert into goods 
+   			(sort_id,goods_name,goods_content,goods_state,goods_start_time,store_id,supplier_id,seller_id,goods_img1,goods_img2,goods_img3)
+   		values (#{sort_id},#{goods_name},#{goods_content},#{goods_state},#{goods_start_time},#{store_id},#{supplier_id},#{seller_id},#{goods_img1},#{goods_img2},#{goods_img3})
+   </insert>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Goods">
+		delete from goods where goods_id=#{goods_id}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="Goods">
+		update goods
+		set goods_name=#{goods_name},
+			goods_content=#{goods_content},
+			goods_state=#{goods_state},
+			supplier_id=#{supplier_id},
+			sort_id=#{sort_id},
+			goods_img1=#{goods_img1}
+		where goods_id=#{goods_id}
+	</update>
+	
+	<!-- 查找 -->
+	<select id="query" parameterType="Goods" resultType="Goods">
+		select * from goods where goods_id=#{goods_id}
+	</select>
+	
+	<select id="list" parameterType="Goods" resultType="Goods">
+		select su.supplier_name,so.sort_name,g.* from goods g,supplier su,sort so  where g.store_id=#{store_id} 
+		and su.supplier_id=g.supplier_id
+		and so.sort_id = g.sort_id
+	</select>
+	
+	<!-- 查找所有的二级分类 -->
+	<select id="listSort2" resultType="Sort">
+		select * from sort where store_id=#{store_id}
+	</select>
+	
+	<!-- 查询所有的供应商 -->
+	<select id="listSupplier" resultType="Supplier">
+		select * from supplier where store_id=#{store_id}
+	</select>
+	<!-- 以下是二级菜单 -->
+	
+    
+</mapper>

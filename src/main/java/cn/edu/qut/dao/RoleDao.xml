@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.RoleDao">
+   
+   <!-- <resultMap type="cn.edu.qut.entity.Role" id="Role">
+   
+   </resultMap> -->
+  
+    
+    <!-- 根据用户名查询相应角色 -->
+    <select id="findRolesBySellerName" parameterType="String" 
+        resultType="cn.edu.qut.entity.Role">
+       	SELECT
+			r.*
+		FROM
+			seller s,
+			<!-- seller_role sr, -->
+			role r
+		WHERE
+			s.seller_login_name = #{seller_name}
+		<!-- AND s.seller_id = sr.seller_id -->
+		AND s.role_id = r.role_id
+    </select>
+   
+</mapper>

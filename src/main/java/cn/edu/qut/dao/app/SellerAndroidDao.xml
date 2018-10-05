@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.app.SellerAndroidDao">
+	  <!-- 	//密码修改 -->
+   <update id="updataPassword">
+   		update seller set seller_password=#{seller_password}
+   		where seller_id=#{seller_id}
+   </update>
+</mapper>

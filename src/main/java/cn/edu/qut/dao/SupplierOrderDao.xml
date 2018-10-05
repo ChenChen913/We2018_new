@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.SupplierOrderDao">
+		<!-- 查找订单 -->
+	<select id="findAll" parameterType="SupplierOrder" resultType="SupplierOrder">
+		SELECT og.goods_id,a.attribute_id,a.attribute_name,g.goods_name,COUNT(og.goods_num) as goods_num
+		FROM `order` o 
+		LEFT JOIN order_goods og ON og.order_id = o.order_id 
+		LEFT JOIN goods g ON og.goods_id = g.goods_id 
+		LEFT JOIN attribute a ON a.goods_id = g.goods_id
+		WHERE o.order_state = '1' AND o.store_id = #{store_id}
+		GROUP BY og.goods_id,a.attribute_id,a.attribute_name,g.goods_name
+	</select>
+		<insert id="addSupplierOrder" parameterType="SupplierOrder" >
+		insert into supplier_order 
+			(order_number,goods_id,goods_name,goods_num,attribute_id,store_id,attribute_name,order_state)
+		values (#{order_number},#{goods_id},#{goods_name},#{goods_num},#{attribute_id},#{store_id},#{attribute_name},#{order_state})
+	</insert>
+	
+	<select id="findAllSuOrder" parameterType="SupplierOrder" resultType="SupplierOrder">
+		SELECT o.*
+		FROM `supplier_order` o 
+		WHERE o.order_state = #{order_state} AND o.store_id = #{store_id}
+	</select>
+	
+	    <!-- 修改商品数量 -->
+    <update id="updateOrder" parameterType="SupplierOrder" >
+    	update  supplier_order set order_state=#{order_state} where supplier_order_id=#{supplier_order_id} and order_state='1'
+    </update>
+    
+      <update id="updateOrderState" parameterType="Order">
+    	update `order` set order_state='2' where order_id=#{order_id} and order_state = '1'
+    </update>
+    
+      <update id="updateOrderGoods" parameterType="Order">
+    	update order_goods set order_goods_state='2' where order_id=#{order_id}
+    </update>
+    <select id="selectOrder"  resultType="Order">
+		SELECT o.*
+		FROM `order` o 
+		WHERE o.order_state = '1' AND o.store_id = #{store_id}
+	</select>
+    
+</mapper>

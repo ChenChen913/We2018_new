@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.MallDao">
+    <select id="mallStoreList" resultType="Store">
+    	select * from store where store_name like concat(concat("%",#{store_name}),"%")
+	</select>
+    <select id="mallGoodsList" resultType="Goods">
+    	select * from goods where 1=1
+    	<if test="store_id!=null and store_id!=''">
+    		and store_id = #{store_id}
+    	</if>
+    	<if test="sort_id !=null and sort_id!=''">
+    		and sort_id = #{sort_id}
+    	</if>
+	</select>
+    <select id="mallSortList" resultType="Sort">
+    	select * from sort where store_id = #{store_id}
+	</select>
+	
+	<select id="query" resultType="Goods">
+		select * from goods where goods_id =#{goods_id}
+	</select>
+	
+	<!-- 根據商品id查詢所有的屬性 -->
+	<select id="listAttribute" resultType="Attribute">
+		select * from attribute where goods_id =#{goods_id}
+	</select>
+	
+	<select id="queryGradeExist" resultType="Integer">
+	    select count(*) from grade where store_id=#{store_id} and customer_id=#{customer_id}
+	</select>
+	
+	<select id="queryGrade" resultType="Integer">
+		select grade_type from grade where store_id=#{store_id} and customer_id=#{customer_id}
+	</select>
+</mapper>

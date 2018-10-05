@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.qut.dao.SupplierDao">
+    <!-- 增 -->
+   <insert id="add" parameterType="Supplier">
+   		insert into supplier 
+   			(supplier_name,supplier_contacts,supplier_phone,supplier_epay,store_id)
+   		values (#{supplier_name},#{supplier_contacts},#{supplier_phone},#{supplier_epay},#{store_id})
+   </insert>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Supplier">
+		delete from supplier where supplier_id=#{supplier_id}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="Supplier">
+		update supplier
+		set supplier_name=#{supplier_name},
+			supplier_contacts=#{supplier_contacts},
+			supplier_phone=#{supplier_phone},
+			supplier_epay=#{supplier_epay}
+		where supplier_id=#{supplier_id}
+	</update>
+	
+	<!-- 查找 -->
+	<select id="query" parameterType="Supplier" resultType="Supplier">
+		select * from supplier where supplier_id=#{supplier_id}
+	</select>
+	
+	<select id="list" resultType="Supplier">
+		select * from supplier where store_id=#{store_id}
+	</select>
+    
+</mapper>
